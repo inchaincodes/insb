@@ -1,0 +1,37 @@
+<div class="row clearfix" ng-controller="addressesCtrl">
+
+
+  <div class="col-lg-12 clearfix">
+    <div class="address_s">
+      <table class="table table-striped table-hover"  style="table-layout:fixed">
+        <thead>
+        <tr class='info'>
+          <th  style='width:30%;vertical-align: middle;text-align: center;'>地址</th>
+          <th class="hidden-xs" style='vertical-align: middle;text-align: center;'>最新交易</th>
+          <th class="hidden-xs" style='vertical-align: middle;text-align: center;'>创建时间</th>
+          <th style='width:10%;vertical-align: middle;text-align: center;'>资产</th>
+          <th style='width:15%;vertical-align: middle;text-align: center;'>信用数</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--'balance credit txCount time firsttime total'-->
+        <tr ng-repeat="ss in addressList.docs">
+          <td class="col-md-3" style='overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align: middle;text-align: center;'>
+            <a href="/address/{{ ss._id }}">{{ ss['_id'] }}</a>
+          </td>
+          <td class="col-md-2 hidden-xs" style='vertical-align: middle;text-align: center;'>{{ ss['time'] | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td class="col-md-2 hidden-xs" style='vertical-align: middle;text-align: center;'>{{ ss['firsttime'] | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td class="col-md-1" style='vertical-align: middle;text-align: center;'>{{ ss.balance/100000000 }} INS</td>
+          <td class="col-md-2" style='vertical-align: middle;text-align: center;'>{{ ss.credit }} </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-12 clearfix">
+    <div align="center">
+      <ul class="pagination" id='address'>
+      </ul>
+    </div>
+  </div>
+ </div>

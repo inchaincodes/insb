@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-lg-12">
+      <div class="col-md-4">
+        <h2>区块</h2>
+      </div>
+      <div class="col-md-3 pull-right">
+        <a herf="/block"><h2>...更多</h2></a>
+      </div>
+    </div>
+  </div>
+  <% include blocks %>
+  <div class="row clearfix">
+    <div class="col-lg-12">
+      <div class="col-md-4">
+        <h2>交易</h2>
+      </div>
+      <div class="col-md-3 pull-right">
+        <a herf="/transaction"><h2>...更多</h2></a>
+      </div>
+    </div>
+  </div>
+  <% include transactions %>
+  <div class="row clearfix">
+    <div class="col-lg-12">
+      <div class="col-md-4">
+        <h2>地址</h2>
+      </div>
+      <div class="col-md-3 pull-right">
+        <a herf="/address"><h2>...更多</h2></a>
+      </div>
+    </div>
+  </div>
+  <% include addresses %>
+</div>
+<script>
+  $(function(){
+    $('#block').hide();
+    $('#transaction').hide();
+    $('#address').hide();
+  })
+</script>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <script src="//cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jqueryui/1.8.23/jquery-ui.min.js "></script>
+    <link href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="//cdn.bootcss.com/angular.js/1.5.9/angular.min.js"></script>
+    <script src="//cdn.bootcss.com/angular.js/1.5.9/angular-resource.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+  </head>
+  <body ng-app="myApp">
+
+    <div class="container" ng-controller="blockCtrl">
+      <div class="row clearfix">
+        <div class="col-md-12 column">
+          <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+              <a class="navbar-brand" href="/"><strong>INSB</strong></a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active">
+                  <a href="/">首页</a>
+                </li>
+                <li>
+                  <a href="http://www.inchain.org" target="_blank">官网</a>
+                </li>
+
+              </ul>
+              <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                  <input type="text" id="block_id" class="form-control" ng-model="height" />
+                </div>
+                <button id="block" class="btn btn-default" ng-click="query(height)">查询</button>
+                <!--<button type="submit" class="btn btn-default">查询</button>-->
+              </form>
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <a id="wallet_version">{{version}}</a>
+                </li>
+                <li>
+                  <!--<a href="#" id="bestblockheight">最新高度</a>-->
+                  <a>最新高度:</a>
+                </li>
+                <li>
+                  <!--<a href="#" id="bestblockheight">最新高度</a>-->
+                  <a id="bestblockheight"><strong>{{ bestblockheight }}</strong></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">语言<strong class="caret"></strong></a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="#">中文</a>
+                    </li>
+                    <li class="divider">
+                    </li>
+                    <li>
+                      <a href="#">English</a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+          </nav>
+          <div style="margin-left:auto; margin-right:auto;width:80%;">
+            <h3>block: {{block.hash}}</h3>
+            <table class="table table-hover">
+              <thead>
+              <tr><th>key</th> <th> value </th></tr>
+              </thead>
+              <tbody>
+                <tr><td>version:</td><td>{{ block.version }}</td></tr>
+                <tr><td>height:</td><td>{{ block.height }}</td></tr>
+                <tr><td>hash:</td><td>{{ block.hash }}</td></tr>
+                <tr><td>preHash:</td><td><a ng-click="query(block.preHash)">{{ block.preHash }}</a></td></tr>
+                <tr><td>merkleHash:</td><td>{{ block.merkleHash }}</td></tr>
+                <tr><td>time:</td><td>{{ block.time }}</td></tr>
+                <tr><td>periodStartTime:</td><td>{{ block.periodStartTime }}</td></tr>
+                <tr><td>timePeriod:</td><td>{{ block.timePeriod }}</td></tr>
+                <tr><td>consensusAddress:</td><td>{{ block.consensusAddress }}</td></tr>
+                <!--<tr><td>scriptSig:</td><td>{{block.scriptSig }}</td></tr>-->
+                <tr><td>txCount:</td><td>{{ block.txCount }}</td></tr>
+
+              </tbody>
+            </table>
+            <div align="center">
+              <button ng-click="query(block.height-1)" ng-disabled="block.height<=0">上一块</button>{{block.height}}
+              <button ng-click="query(block.height+1)" ng-disabled="block.height>=bestblockheight">下一块</button>
+            </div>
+
+            <pr/>
+            <h3>Transactions</h3>
+            <table class="table table-hover">
+              <thead>
+              <tr><th> hash</th> <th> type </th><th> time </th><th>address </th></tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="x in block.txs">
+                <td><a  ng-click="gettx(x.hash)">{{x.hash}}</a></td><td>{{x.type}}</td><td>{{ x.time | date:'yyyy-MM-dd HH:mm:ss' }}</td> <td>{{x.address}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+</html>
+<script>
+  var app = angular.module('myApp', []);
+  app.controller('blockCtrl', function($scope, $http, $interval) {
+    $scope.block = {};
+
+    function getblock(id) {
+      $http.get("/api/v1/block/"+id).then(function (response) {
+        $scope.block = response.data.block;
+      })
+    }
+
+    function dosync() {
+      $http.get("/api/v1/bestblockheight").then(function (response) {
+        $scope.bestblockheight = response.data.bestblockheight;
+      });
+    }
+
+    $http.get("/api/v1/version").then(function (response) {
+      $scope.version = response.data.version;
+    });
+    $http.get("/api/v1/bestblockheight").then(function (response) {
+      $scope.height = $scope.bestblockheight = response.data.bestblockheight;
+      getblock($scope.height);
+    });
+
+    $scope.query = function(id) {
+      getblock(id);
+    }
+
+    $scope.gettx = function(id) {
+      $http.get("/api/v1/tx/"+id).then(function (response) {
+        var tx = response.data;
+        alert(JSON.stringify(tx));
+      });
+    }
+
+    $interval(dosync, 5000);
+  });
+</script>

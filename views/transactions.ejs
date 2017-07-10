@@ -1,0 +1,41 @@
+<div class="row clearfix"  ng-controller="transactionsCtrl">
+  <div class="col-lg-12 clearfix">
+    <div class="tx_s">
+      <table class="table table-striped table-hover" style="table-layout:fixed">
+        <thead>
+        <tr class='info'>
+          <th style='width:15%;vertical-align: middle;text-align: center;'>类型</th>
+          <th style='width:25%;vertical-align: middle;text-align: center;'>交易hash</th>
+          <th class="hidden-xs" style='vertical-align: middle;text-align: center;'>高度</th>
+          <th style='width:20%;vertical-align: middle;text-align: center;'>交易时间</th>
+          <!--<th class="hidden-xs" style='vertical-align: middle;text-align: center;'>输入/输出量</th>-->
+          <th class="hidden-xs" style='vertical-align: middle;text-align: center;'>手续费</th>
+          <th class="hidden-xs" style='vertical-align: middle;text-align: center;'>版本</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--'type height time fee version';-->
+        <tr ng-repeat="ss in transactionList.docs">
+          <td class="col-md-2" style='vertical-align: middle;text-align: center;'>{{ ss['type'] }}</td>
+          <td class="col-md-2"
+              style='overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align: middle;text-align: center;'><a href="/transaction/{{ss._id}}">{{ ss['_id'] }}</a></td>
+          <td class="col-md-1 hidden-xs"
+              style='vertical-align: middle;text-align: center;'><a href="/block/{{ss.height}}">{{ ss['height'] }}</a></td>
+          <td class="col-md-2" style='vertical-align: middle;text-align: center;'>{{ ss.time | date:'yyyy-MM-dd HH:mm:ss Z' }}</td>
+          <td class="col-md-1 hidden-xs" style='vertical-align: middle;text-align: center;'>{{ ss['fee']/100000000 || 0 }} INS</td>
+          <td class="col-md-2 hidden-xs" style='vertical-align: middle;text-align: center;'>{{ ss['version'] }}
+          </td>
+
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-12 clearfix">
+    <div align="center">
+      <ul class="pagination" id='transaction'>
+      </ul>
+    </div>
+  </div>
+</div>
