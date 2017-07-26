@@ -220,9 +220,11 @@ function sync_info(){
     Block.count().then(function(count){
         console.log('sync_info start at '+count);
         db_block_count_base = count;
+        return  rpc.loginAsync();  //login rpc first.
+    }).then(function(data){
+        console.log(data);
         setTimeout(co_sync,10);
     })
-    //setTimeout(co_sync,10);
 }
 //sync_info();
 module.exports = sync_info;

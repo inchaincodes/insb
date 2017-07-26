@@ -23,7 +23,7 @@ module.exports = {
 // inchain rpc server
     rpc_user: 'user',
     rpc_port: 8632,
-    rpc_password: 'oYHYJJdRVJMhhacIeSCL',
+    rpc_password: 'neSrQqSJjraBYWWIlraF',
     rpc_host: 'localhost',
 
 //    站点基础信息配置
